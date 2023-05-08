@@ -14,6 +14,7 @@ class StudentController extends Controller
     public function save_student(Request $request)
     {
         $data = $request->all();
+        // dd($data);
         $validator = Validator::make($data, [
             'name'          =>  'required',
             'email'         =>  'required | email',
@@ -75,65 +76,48 @@ class StudentController extends Controller
         // return "nikhilyogi";die;
         // dd($request->toArray());
         // dd($request->file());
-        $request->validate([
-            'file' => 'required | mimes:jpg,'
-        ]);
+        // $request->validate([
+        //     'file' => 'required | mimes:jpg,'
+        // ]);
 
         $student = new Student();
+
         if ($request->file()) {
+            // dd("dfsf");
             $file_name = time() . '_' . $request->file->getClientOriginalName();
             $file_path = $request->file('file')->move(public_path('storage/students'), $file_name, 'public');
+            // dd($file_path);
 
             $student->names = time() . '_' . $request->file->getClientOriginalName();
             $student->path  = '/storage/' . $file_path;
             $student->name  = request()->name;
             $student->email = request()->email;
-            $student->phone = request()->phone;
+            $dd = $student->phone = request()->phone;
+            // dd($dd);
             $student->save();
             // dd("dsf");
             // return response()->json('file uploaded successfully.');
+            return redirect('/home')->with('status', 'Student added successfully!');
+
+
             return "file uploaded successfully.";
         }
     }
 
     public function submitRating(Request $request)
-    {
-       
-        $data = request()->all(); // returns an array of all the data sent in the request
-// dd($data);
-        // dd($request->toArray());
-        $validatedData = $request->validate([
-            'id' => 'required',
-            'rating' => 'required|numeric|min:1|max:5',
-        ]);
-            $rating = new Rating();
-            $rating->rating=request()->rating;
-            $rating->student_id=request()->id;
-            $rating->save();
-
-        $student_id = $request->input('id');
-        $ratingValue = $request->input('rating');
-        // dd($student_id);
-        
-        $rating = Rating::where('student_id', $student_id)
-            ->first();
-// dd($rating);
-        if (!$rating) {
-            $rating = new Rating();
-            // $rating->user_id = $user->id;
-            $rating->student_id = $validatedData['student_id'];
-            $rating->ratingValue = $validatedData['rating'];
-            
-        }
-
-        $rating->rating = $ratingValue;
-// dd($ratingValue);
-        $ratings=$rating->save();
-// dd($rating->save());
+    {       
+        $rating1 = Student::updateOrCreate(
+            [
+                'id' => $request->id
+            ],
+            [
+                'rating' => $request->rating
+            ]
+        );
         return response()->json([
             'success' => true,
             'message' => 'Rating saved successfully.',
-            'ratings'=>$ratings
+            // 'ratings' => $ratings
         ]);
     }
 }

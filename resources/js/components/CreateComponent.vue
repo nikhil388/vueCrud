@@ -140,11 +140,11 @@
                                     <td>
                                         <div class="star-ratings">
                                             <div>
-                                                
+                                                <!-- {{ student.rating }} -->
                                                 <input type="hidden" v-model="rating" />
                                                 <div class="rating">
                                                     <span  v-for="i in max" :key="i"
-                                                        :class="{ 'filled': i <= rating, 'empty': i > rating }"
+                                                        :class="{ 'filled': i <= student.rating, 'empty': i > student.rating }"
                                                         @click.prevent="submitRating(i, student.id)" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                         ★
                                                     </span>
@@ -307,7 +307,7 @@ export default {
         },
         formSubmit(e) {
             e.preventDefault();
-            alert("hey")
+            // alert("hey")
             let existingObj = this;
             const config = {
                 headers: {
@@ -338,7 +338,7 @@ export default {
                 this.errors.email = 'email is required.';
             } else if (!this.validEmail(this.email)) {
                 this.errors.email = 'Valid email required.';
-            } email
+            } 
             if (!this.errors.length) {
                 return true;
             }
@@ -500,7 +500,7 @@ body {
 }
 
 body {
-    text-align: center;
+    /* text-align: center; */
     background: #51C3A0;
     padding: 50px
 }

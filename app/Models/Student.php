@@ -17,6 +17,7 @@ class Student extends Model
         'email',
         'phone',
         'name',
-        'path'
+        'path',
+        'rating'
     ];
 }
